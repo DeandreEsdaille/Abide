@@ -45,7 +45,19 @@ jobs:
           codesign --force --deep --sign - dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component
           lipo dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component/Contents/MacOS/Abide -verify_arch arm64 x86_64
           sudo ditto dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component /Library/Audio/Plug-Ins/Components/Abide.component
-          /usr/bin/auval -v aumu Abid GtJu
+          mkdir -p "$HOME/Library/Audio/Plug-Ins/Components"
+          ditto dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component "$HOME/Library/Audio/Plug-Ins/Components/Abide.component"
+          plutil -p "$HOME/Library/Audio/Plug-Ins/Components/Abide.component/Contents/Info.plist"
+          killall AudioComponentRegistrar || true
+          sleep 5
+          /usr/bin/auval -a
+          validated=0
+          for attempt in 1 2 3; do
+            if /usr/bin/auval -v aumu Abid GtJu; then validated=1; break; fi
+            killall AudioComponentRegistrar || true
+            sleep 5
+          done
+          test "$validated" = 1
           pkgbuild --root dist/mac-root --identifier com.gimmethatjuice.abide.au --version 0.5.0 --install-location / dist/Abide-0.5.0-macOS-Universal-AU.pkg
       - name: Build and test Windows VST3 installer
         if: runner.os == 'Windows'
@@ -53,6 +65,12 @@ jobs:
         run: |
           $env:Path += ';C:\Program Files (x86)\Inno Setup 6'
           ./photo-edition/scripts/build-windows.ps1
+      - name: Preserve compiled AU for diagnosis if validation fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Abide-0.5.0-AU-diagnostic
+          path: photo-edition/build-mac/Abide_artefacts/Release/AU/Abide.component
       - uses: actions/upload-artifact@v4
         with:
           name: Abide-0.5.0-${{ runner.os }}
