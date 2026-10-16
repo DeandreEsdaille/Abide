@@ -1,7 +1,7 @@
 #include "../Source/PluginProcessor.h"
 #include <iostream>
 #include <stdexcept>
-void require(bool value,const char*message){if(!value)throw std::runtime_error(message);}
+static void require(bool value,const char*message){if(!value)throw std::runtime_error(message);}
 void wait(SampleLibrary& library){for(int n=0;n<1000&&library.isLoading();++n)juce::Thread::sleep(10);require(!library.isLoading(),"sample load timeout");}
 int runSampleTests(){
  juce::ScopedJuceInitialiser_GUI gui;
