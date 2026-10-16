@@ -1,5 +1,9 @@
 name: Build Abide
-on: [workflow_dispatch, push]
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '.github/workflows/publish-installers.yml'
 jobs:
   native:
     strategy:

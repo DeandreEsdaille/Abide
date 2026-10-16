@@ -1,0 +1,35 @@
+name: Publish Abide installers
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/publish-installers.yml'
+permissions:
+  actions: read
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Retrieve tested v0.4.0 installers
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 38951591958
+          pattern: Abide-*
+          merge-multiple: true
+          path: dist
+      - name: Publish downloadable prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test -s dist/Abide-0.4.0-macOS-Universal.pkg
+          test -s dist/Abide-0.4.0-Windows-x64-Setup.exe
+          test -s dist/Abide-0.4.0-Windows-x64.zip
+          gh release create v0.4.0 dist/*.pkg dist/*Setup.exe dist/*.zip \
+            --target 1bf55224ecb8ee974d4147a70d255f6ee6c770d6 \
+            --title "Abide 0.4.0" --prerelease \
+            --notes "Violet orbital interface, layered note keys, preset pads, reverb and delay controls, two factory drones and eight sample import slots. Includes VST3 and standalone. All three automated tests passed on macOS and Windows in build 38951591958. Unsigned prerelease; end-user installation and real DAW compatibility remain unverified. Close your DAW before installing."
