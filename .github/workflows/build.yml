@@ -1,0 +1,28 @@
+name: Build Abide
+on: [workflow_dispatch, push]
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build macOS universal package
+        if: runner.os == 'macOS'
+        run: bash scripts/build-mac.sh
+      - name: Build Windows and installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:Path += ';C:\Program Files (x86)\Inno Setup 6'
+          ./scripts/build-windows.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Abide-${{ runner.os }}
+          path: |
+            dist/*.pkg
+            dist/*.zip
+            dist/*Setup.exe
+          if-no-files-found: error

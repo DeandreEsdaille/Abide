@@ -1,0 +1,21 @@
+ABIDE by Gimme That Juice — v0.1 prototype
+
+TRY IT NOW (Mac or Windows)
+1. Extract this ZIP.
+2. Open Preview.html in Chrome or Edge.
+3. Click ENABLE AUDIO, then a note such as C.
+4. Adjust Reverb, Room Size, Delay, Delay Time, Feedback and the other controls.
+5. FADE OUT stops gradually. PANIC stops everything immediately.
+
+Render an audio demo from a local build with:
+AbideSmoke --render Abide-Audio-Demo.wav.
+The generated atmospheric photograph is in Assets/atmosphere.jpg.
+
+NATIVE VST3 AND STANDALONE
+This ZIP contains the source and build scripts, not compiled Mac/Windows
+installers. The source compiles as a native VST3 and standalone on the Linux
+development machine. Mac and Windows builds still need to run on their native
+runners. See README.md for scripts and the included GitHub Actions workflow.
+
+The browser preview lets you try the idea today; it is not a VST3 and will
+sound somewhat different from the native processor.
