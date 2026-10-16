@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, windows-2022]
+        os: [macos-14]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +43,7 @@ jobs:
           mkdir -p dist/mac-root/Library/Audio/Plug-Ins/Components
           ditto build-mac/Abide_artefacts/Release/AU/Abide.component dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component
           codesign --force --deep --sign - dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component
-          lipo -verify_arch arm64 x86_64 dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component/Contents/MacOS/Abide
+          lipo dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component/Contents/MacOS/Abide -verify_arch arm64 x86_64
           sudo ditto dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component /Library/Audio/Plug-Ins/Components/Abide.component
           /usr/bin/auval -v aumu Abid GtJu
           pkgbuild --root dist/mac-root --identifier com.gimmethatjuice.abide.au --version 0.5.0 --install-location / dist/Abide-0.5.0-macOS-Universal-AU.pkg
