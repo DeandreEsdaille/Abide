@@ -1,5 +1,17 @@
 # Validation — 16 October 2026
 
+## Version 0.3.0 — premium interface
+
+- Native editor redesigned with 11 vertical faders in Sculpt, Space and Master banks; machined caps, recessed rails and raised buttons.
+- Existing processor parameter IDs, sample library and audio engine retained.
+- Linux Release standalone and VST3 built; 3/3 CTest checks passed. Native editor rendered at 1120 × 780 and visually inspected.
+- Windows x64 and macOS Universal builds completed in [run 38949918514](https://github.com/DeandreEsdaille/Abide/actions/runs/38949918514), commit `0c39ab7c34291ad85530d9d2c2d921360b417511`. Both runners passed 3/3 CTest checks and generated installers.
+- Downloaded artifact SHA-256 digests matched Actions. ZIP integrity passed; Windows app/plugin verified as x64 PE binaries. Mac PKG app/plugin payloads verified to contain both Intel x86_64 and Apple Silicon arm64 slices.
+- End-user installation and real DAW testing remain unverified. Installers are unsigned; macOS binaries use ad-hoc signing.
+
+## Earlier version 0.1.0 validation
+
+
 Completed on Linux x86_64:
 
 - JUCE 8.0.6 / GCC / CMake Release build of native standalone and VST3 succeeded.
