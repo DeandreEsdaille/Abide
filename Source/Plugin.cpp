@@ -1,8 +1,9 @@
 #include "PluginProcessor.h"
 #include "BinaryData.h"
+#include "PremiumLook.h"
 void AbideProcessor::initializeFactorySounds(){library.addFactory(0,BinaryData::HeavenlyChoir_flac,BinaryData::HeavenlyChoir_flacSize,"Heavenly Choir");library.addFactory(1,BinaryData::CloudDrift_flac,BinaryData::CloudDrift_flacSize,"Cloud Drift");}
 class AbideEditor : public juce::AudioProcessorEditor, private juce::Timer {
- AbideProcessor&p;juce::Image art;juce::LookAndFeel_V4 skin;
+ AbideProcessor&p;juce::Image art;PremiumLook skin;
  std::array<juce::TextButton,12> keys;std::array<juce::Slider,11> knobs;std::array<juce::Label,11> labels;
  std::vector<std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>> attachments;
  juce::TextButton stop{"FADE OUT"},panic{"PANIC"},importButton{"IMPORT DRONES..."},pixabay{"SAMPLE SOURCES"};
@@ -14,10 +15,10 @@ class AbideEditor : public juce::AudioProcessorEditor, private juce::Timer {
 public:
  AbideEditor(AbideProcessor&proc):AudioProcessorEditor(proc),p(proc){
   art=juce::ImageCache::getFromMemory(BinaryData::atmosphere_jpg,BinaryData::atmosphere_jpgSize);
-  skin.setColour(juce::Slider::rotarySliderFillColourId,juce::Colour(0xffb9d8ce));skin.setColour(juce::Slider::thumbColourId,juce::Colours::white);skin.setColour(juce::Slider::textBoxTextColourId,juce::Colours::white);skin.setColour(juce::Slider::textBoxOutlineColourId,juce::Colours::transparentBlack);skin.setColour(juce::TextButton::buttonColourId,juce::Colour(0xff1b2c39));skin.setColour(juce::TextButton::buttonOnColourId,juce::Colour(0xff527c79));setLookAndFeel(&skin);
+  setLookAndFeel(&skin);
   for(int i=0;i<12;++i){auto&b=keys[i];b.setButtonText(names[i]);b.onClick=[this,i]{p.command=48+i;};addAndMakeVisible(b);}
-  const char* ids[]={"gain","tone","motion","width","attack","release","reverb","size","delay","time","feedback"};const char* titles[]={"VOLUME","TONE","MOVEMENT","WIDTH","ATTACK (s)","RELEASE (s)","REVERB","ROOM SIZE","DELAY","TIME (ms)","FEEDBACK"};
-  for(int i=0;i<11;++i){auto&k=knobs[i];k.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);k.setTextBoxStyle(juce::Slider::TextBoxBelow,false,80,20);addAndMakeVisible(k);labels[i].setText(titles[i],juce::dontSendNotification);labels[i].setJustificationType(juce::Justification::centred);labels[i].setFont(juce::FontOptions(12.f));addAndMakeVisible(labels[i]);attachments.push_back(std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.state,ids[i],k));}
+  const char* ids[]={"gain","tone","motion","width","attack","release","reverb","size","delay","time","feedback"};const char* titles[]={"LEVEL","TONE","MOTION","WIDTH","ATTACK / s","RELEASE / s","REVERB","SIZE","DELAY","TIME / ms","FEEDBACK"};
+  for(int i=0;i<11;++i){auto&k=knobs[i];k.setSliderStyle(juce::Slider::LinearVertical);k.setTextBoxStyle(juce::Slider::TextBoxBelow,false,66,24);k.setColour(juce::Slider::trackColourId,juce::Colour(i==0?0xffd0b985:i<6?0xff9ec7b9:0xffa8b9cf));addAndMakeVisible(k);labels[i].setText(titles[i],juce::dontSendNotification);labels[i].setJustificationType(juce::Justification::centred);labels[i].setFont(juce::FontOptions(12.f));addAndMakeVisible(labels[i]);attachments.push_back(std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(p.state,ids[i],k));}
   presets.addItemList({"Still Waters","Prayer Room","Open Heaven","Morning Light"},1);presets.setTextWhenNothingSelected("Preset / custom");presets.onChange=[this]{if(presets.getSelectedId()>0)p.preset(presets.getSelectedId()-1);};addAndMakeVisible(presets);
   texture.addItemList({"Velvet","Radiance","Halo"},1);addAndMakeVisible(texture);textureLink=std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.state,"colour",texture);
   drone.addItem("Built-in synthesizer",1);for(int i=0;i<SampleLibrary::count;++i)drone.addItem(i<SampleLibrary::factoryCount?juce::String("Loading..."):"Imported "+juce::String(i-SampleLibrary::factoryCount+1),i+2);addAndMakeVisible(drone);droneLink=std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(p.state,"drone",drone);
@@ -25,7 +26,7 @@ public:
   rootLabel.setText("SAMPLE ROOT",juce::dontSendNotification);rootLabel.setFont(juce::FontOptions(11.f));addAndMakeVisible(rootLabel);
   droneLabel.setText("DRONE SOUND",juce::dontSendNotification);droneLabel.setFont(juce::FontOptions(11.f));addAndMakeVisible(droneLabel);
   importButton.onClick=[this]{chooseFiles();};addAndMakeVisible(importButton);pixabay.onClick=[]{juce::URL("https://github.com/DeandreEsdaille/Abide/blob/main/SAMPLE-CREDITS.md").launchInDefaultBrowser();};addAndMakeVisible(pixabay);
-  latchLink=std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(p.state,"latch",latch);addAndMakeVisible(latch);stop.onClick=[this]{p.command=-2;};panic.onClick=[this]{p.command=-3;};addAndMakeVisible(stop);addAndMakeVisible(panic);addAndMakeVisible(status);addAndMakeVisible(info);status.setJustificationType(juce::Justification::centred);status.setFont(juce::FontOptions(16.f));info.setFont(juce::FontOptions(12.f));setSize(1040,800);timerCallback();startTimerHz(10);
+  latchLink=std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(p.state,"latch",latch);addAndMakeVisible(latch);stop.onClick=[this]{p.command=-2;};panic.onClick=[this]{p.command=-3;};addAndMakeVisible(stop);addAndMakeVisible(panic);addAndMakeVisible(status);addAndMakeVisible(info);status.setJustificationType(juce::Justification::centred);status.setFont(juce::FontOptions(13.f));info.setFont(juce::FontOptions(12.f));setSize(1120,780);timerCallback();startTimerHz(10);
  }
  ~AbideEditor()override{setLookAndFeel(nullptr);}
  void chooseFiles(){
@@ -44,13 +45,41 @@ public:
   int note=(p.shownNote.load()%12+12)%12;for(int i=0;i<12;++i)keys[i].setToggleState(p.sounding&&i==note,juce::dontSendNotification);status.setText(p.sounding?names[note]+" / DRONE ACTIVE":"Choose a key / MIDI ready",juce::dontSendNotification);
  }
  void paint(juce::Graphics&g)override{
-  g.fillAll(juce::Colour(0xff101a27));if(art.isValid())g.drawImage(art,getLocalBounds().toFloat(),juce::RectanglePlacement::fillDestination);g.setColour(juce::Colour(0xff081421).withAlpha(.62f));g.fillAll();g.setColour(juce::Colours::white);g.setFont(juce::FontOptions(48.f));g.drawText("ABIDE",40,28,400,60,juce::Justification::left);g.setFont(juce::FontOptions(12.f));g.drawText("G I M M E  T H A T  J U I C E  /  A T M O S P H E R I C  P A D S",43,90,700,25,juce::Justification::left);g.setColour(juce::Colour(0xff081421).withAlpha(.78f));g.fillRoundedRectangle(30,290,980,438,20);g.setColour(juce::Colours::white.withAlpha(.55f));g.setFont(juce::FontOptions(12.f));g.drawText("One note. Room to worship.     |     Latch holds the drone after MIDI release.",40,758,960,22,juce::Justification::centred);
+  g.fillAll(juce::Colour(0xff0b1217));
+  if(art.isValid())g.drawImage(art,juce::Rectangle<float>(0,0,1120,355),juce::RectanglePlacement::fillDestination);
+  g.setGradientFill(juce::ColourGradient(juce::Colour(0xff0b151c).withAlpha(.24f),0,0,juce::Colour(0xff0b1217),0,350,false));g.fillRect(0,0,1120,355);
+  g.setColour(juce::Colour(0xffd4bf8f));g.setFont(juce::FontOptions(11.f));g.drawText("G I M M E  T H A T  J U I C E",40,22,400,22,juce::Justification::left);
+  g.setColour(juce::Colour(0xfff0f2ec));g.setFont(juce::FontOptions(57.f));g.drawText("A B I D E",36,45,450,74,juce::Justification::left);
+  g.setColour(juce::Colour(0xffadbfbd));g.setFont(juce::FontOptions(12.f));g.drawText("A T M O S P H E R I C   I N S T R U M E N T",40,118,400,24,juce::Justification::left);
+  panel(g,{364,112,728,112});
+  caption(g,"TEXTURE",690,122,150);caption(g,"PRESET",820,20,250);
+  caption(g,"PLAY / ROOT KEY",40,238,300);
+  panel(g,{28,354,456,342});panel(g,{498,354,456,342});panel(g,{968,354,124,342});
+  caption(g,"01   /   SCULPT",48,366,250);caption(g,"02   /   SPACE",518,366,250);caption(g,"MASTER",986,366,100);
+  g.setColour(juce::Colour(0xff314145));g.drawHorizontalLine(397,48,464);g.drawHorizontalLine(397,518,934);g.drawHorizontalLine(397,986,1074);
+  // Machined enclosure edges and corner fasteners.
+  for(auto pt: {juce::Point<float>(16,16),juce::Point<float>(1104,16),juce::Point<float>(16,764),juce::Point<float>(1104,764)}){
+   g.setColour(juce::Colour(0xff03090c));g.fillEllipse(pt.x-4,pt.y-3,8,8);g.setColour(juce::Colour(0xff566066));g.drawEllipse(pt.x-4,pt.y-4,8,8,1);g.drawLine(pt.x-2,pt.y+1,pt.x+2,pt.y-2,1);
+  }
+  g.setColour(juce::Colour(0xff29383d));g.drawRect(getLocalBounds().reduced(1),1);
+  g.setColour(juce::Colour(0xff7c9090));g.setFont(juce::FontOptions(11.f));g.drawText("One note. Room to worship.",40,747,400,20,juce::Justification::left);
+  g.drawText("GIMME THAT JUICE   /   ABIDE 0.3",720,747,360,20,juce::Justification::right);
+ }
+ void caption(juce::Graphics&g,const juce::String&text,int x,int y,int w){g.setColour(juce::Colour(0xffbcae8c));g.setFont(juce::FontOptions(11.f));g.drawText(text,x,y,w,22,juce::Justification::left);}
+ void panel(juce::Graphics&g,juce::Rectangle<int> bounds){
+  auto r=bounds.toFloat();g.setColour(juce::Colours::black.withAlpha(.5f));g.fillRoundedRectangle(r.translated(0,4),9);
+  g.setGradientFill(juce::ColourGradient(juce::Colour(0xff253238).withAlpha(.94f),0,r.getY(),juce::Colour(0xff101c22),0,r.getBottom(),false));g.fillRoundedRectangle(r,9);
+  g.setColour(juce::Colour(0xff465458).withAlpha(.7f));g.drawRoundedRectangle(r.reduced(.5f),9,1);
+  g.setColour(juce::Colours::white.withAlpha(.035f));for(int y=bounds.getY()+3;y<bounds.getBottom()-3;y+=3)g.drawHorizontalLine(y,r.getX()+5,r.getRight()-5);
  }
  void resized()override{
-  presets.setBounds(770,40,230,32);droneLabel.setBounds(648,88,115,32);drone.setBounds(770,88,230,32);texture.setBounds(770,140,230,32);importButton.setBounds(40,140,170,32);rootLabel.setBounds(233,140,92,32);root.setBounds(327,140,82,32);info.setBounds(40,181,650,30);status.setBounds(694,181,306,30);
-  for(int i=0;i<12;++i)keys[i].setBounds(40+i*80,224,72,48);
-  for(int i=0;i<11;++i){int row=i<6?0:1,col=i<6?i:i-6;int x=48+col*158;labels[i].setBounds(x,312+row*158,150,24);knobs[i].setBounds(x+13,339+row*158,124,122);}
-  latch.setBounds(850,507,120,28);stop.setBounds(847,550,130,36);panic.setBounds(847,599,130,30);pixabay.setBounds(835,650,154,30);
+  presets.setBounds(820,46,272,34);droneLabel.setBounds(384,122,286,22);drone.setBounds(384,148,286,34);texture.setBounds(690,148,174,34);
+  importButton.setBounds(40,164,188,38);rootLabel.setBounds(886,122,180,22);root.setBounds(886,148,70,34);
+  info.setBounds(384,188,688,26);status.setBounds(780,232,312,28);
+  for(int i=0;i<12;++i)keys[i].setBounds(40+i*87,270,80,54);
+  for(int i=1;i<11;++i){int x=i<6?44+(i-1)*88:514+(i-6)*88;labels[i].setBounds(x,407,80,25);knobs[i].setBounds(x,438,80,239);}
+  labels[0].setBounds(990,407,80,25);knobs[0].setBounds(990,438,80,239);
+  latch.setBounds(40,710,180,28);stop.setBounds(816,706,160,34);panic.setBounds(990,706,102,34);pixabay.setBounds(642,706,160,34);
  }
 };
 juce::AudioProcessorEditor* AbideProcessor::createEditor(){return new AbideEditor(*this);}

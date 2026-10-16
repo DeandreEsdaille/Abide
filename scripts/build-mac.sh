@@ -9,4 +9,4 @@ mkdir -p dist/mac-root/Applications dist/mac-root/Library/Audio/Plug-Ins/VST3
  ditto build-mac/Abide_artefacts/Release/VST3/Abide.vst3 dist/mac-root/Library/Audio/Plug-Ins/VST3/Abide.vst3
 codesign --force --deep --sign - dist/mac-root/Applications/Abide.app
 codesign --force --deep --sign - dist/mac-root/Library/Audio/Plug-Ins/VST3/Abide.vst3
-pkgbuild --root dist/mac-root --identifier com.gimmethatjuice.abide --version 0.2.0 --install-location / dist/Abide-0.2.0-macOS-Universal.pkg
+pkgbuild --root dist/mac-root --identifier com.gimmethatjuice.abide --version 0.3.0 --install-location / dist/Abide-0.3.0-macOS-Universal.pkg

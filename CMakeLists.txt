@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(Abide VERSION 0.2.0 LANGUAGES C CXX)
+project(Abide VERSION 0.3.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 if(APPLE)
  set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum macOS")

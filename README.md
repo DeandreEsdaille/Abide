@@ -1,6 +1,13 @@
 # Abide — Gimme That Juice
 
-Original atmospheric worship drone instrument, version 0.2.0 prerelease.
+Original atmospheric worship drone instrument, version 0.3.0 prerelease.
+
+## New in 0.3
+
+- Premium hardware-inspired native editor: sculpt, space and master fader banks.
+- Machined metal fader caps, recessed illuminated rails, engraved scales and raised key buttons.
+- Atmospheric image header, brushed dark panels and warm brass accents.
+- All existing sample, MIDI, automation, preset and effect parameters retained.
 
 ## New in 0.2
 
@@ -58,7 +65,7 @@ Install Xcode Command Line Tools, Git, and CMake 3.22 or newer. With this folder
 bash scripts/build-mac.sh
 ```
 
-Creates `dist/Abide-0.2.0-macOS-Universal.pkg`, containing `/Applications/Abide.app` and `/Library/Audio/Plug-Ins/VST3/Abide.vst3`. Targets macOS 11 or newer. The package is unsigned and binaries are only ad-hoc signed; a distributable trusted release requires Apple Developer signing and notarization. This script does not disable Gatekeeper or alter security settings.
+Creates `dist/Abide-0.3.0-macOS-Universal.pkg`, containing `/Applications/Abide.app` and `/Library/Audio/Plug-Ins/VST3/Abide.vst3`. Targets macOS 11 or newer. The package is unsigned and binaries are only ad-hoc signed; a distributable trusted release requires Apple Developer signing and notarization. This script does not disable Gatekeeper or alter security settings.
 
 ## Build Windows
 
@@ -68,7 +75,7 @@ Install Visual Studio 2022 with Desktop development with C++, Windows SDK, Git, 
 ./scripts/build-windows.ps1
 ```
 
-Creates `dist/Abide-0.2.0-Windows-x64.zip`; with Inno Setup also creates a Setup.exe. The ZIP includes Abide.exe, the entire Abide.vst3 bundle and an administrator installation script. Install the full VST3 bundle, not just its inner binary. Windows executables are unsigned. Requires the current Microsoft Visual C++ 2015–2022 x64 Redistributable on target machines. Native Windows audio uses JUCE's default device backends; no proprietary ASIO SDK is bundled.
+Creates `dist/Abide-0.3.0-Windows-x64.zip`; with Inno Setup also creates a Setup.exe. The ZIP includes Abide.exe, the entire Abide.vst3 bundle and an administrator installation script. Install the full VST3 bundle, not just its inner binary. Windows executables are unsigned. Requires the current Microsoft Visual C++ 2015–2022 x64 Redistributable on target machines. Native Windows audio uses JUCE's default device backends; no proprietary ASIO SDK is bundled.
 
 ## GitHub builds
 
