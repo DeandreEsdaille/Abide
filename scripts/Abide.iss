@@ -1,13 +1,13 @@
 [Setup]
 AppId=com.gimmethatjuice.abide
 AppName=Abide
-AppVersion=0.3.0
+AppVersion=0.4.0
 AppPublisher=Gimme That Juice
 DefaultDirName={autopf}\Gimme That Juice\Abide
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=..
-OutputBaseFilename=Abide-0.3.0-Windows-x64-Setup
+OutputBaseFilename=Abide-0.4.0-Windows-x64-Setup
 Compression=lzma2
 SolidCompression=yes
 [Files]
