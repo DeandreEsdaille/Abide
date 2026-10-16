@@ -1,0 +1,42 @@
+name: Build Abide Photo Edition
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/photo-edition.yml'
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and extract approved photo edition source
+        shell: python
+        run: |
+          import pathlib, hashlib, zipfile, io
+          parts = sorted(pathlib.Path('.').glob('AbidePhotoSource.zip.part*'))
+          assert len(parts) == 4, 'Missing build source parts'
+          data = b''.join(p.read_bytes() for p in parts)
+          assert hashlib.sha256(data).hexdigest() == '1105faba8d40ce5d4f52d3c26dec29d1f153e4526ad876d4951d051179f37690', 'Source checksum mismatch'
+          zipfile.ZipFile(io.BytesIO(data)).extractall('photo-edition')
+      - name: Build and test macOS universal installer
+        if: runner.os == 'macOS'
+        run: bash photo-edition/scripts/build-mac.sh
+      - name: Build and test Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:Path += ';C:\Program Files (x86)\Inno Setup 6'
+          ./photo-edition/scripts/build-windows.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Abide-Photo-${{ runner.os }}
+          path: |
+            photo-edition/dist/*.pkg
+            photo-edition/dist/*Setup.exe
+          if-no-files-found: error
