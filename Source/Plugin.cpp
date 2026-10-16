@@ -37,6 +37,7 @@ public:
   for(int i=0;i<SampleLibrary::count;++i){auto d=p.library.describe(i);drone.changeItemText(i+2,d.name.isEmpty()?"Imported "+juce::String(i-SampleLibrary::factoryCount+1):d.name+(d.loading?" (loading)":""));drone.setItemEnabled(i+2,d.ready);}
   if(pendingSelection>=0){auto d=p.library.describe(pendingSelection);if(!d.loading){if(d.ready)p.set("drone",float(pendingSelection+1));else importError=d.error;pendingSelection=-1;}}
   int selected=int(p.get("drone"))-1;root.setEnabled(selected>=SampleLibrary::factoryCount);texture.setEnabled(selected<0);root.setSelectedId(selected>=0?p.library.root(selected)+1:1,juce::dontSendNotification);
+  drone.setSelectedId(selected+2,juce::dontSendNotification);
   juce::String message="Choose Heavenly Choir or Cloud Drift, or import your own recordings.";
   if(selected>=0){auto d=p.library.describe(selected);message=d.loading?"Loading "+d.name+"...":d.error.isNotEmpty()?d.error:d.ready?d.name+(selected<SampleLibrary::factoryCount?" | Factory recording, tuned to C.":" | Set SAMPLE ROOT to the recording's original key."):"Sample unavailable. Import the audio file again.";}
   if(p.library.isLoading())message="Preparing your drone recording...";if(importError.isNotEmpty())message=importError;info.setText(message,juce::dontSendNotification);info.setTooltip(message);
