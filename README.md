@@ -1,6 +1,16 @@
 # Abide — Gimme That Juice
 
-Original atmospheric worship drone instrument, version 0.1.0 prototype.
+Original atmospheric worship drone instrument, version 0.2.0 prerelease.
+
+## New in 0.2
+
+- **Drone Sound** menu with two bundled CC0 recordings: Heavenly Choir (isaiah658 / OpenGameArt) and Cloud Drift (indigo.cloud / Freesound), plus the original synthesizer.
+- **Import Drones** for up to eight WAV, MP3, FLAC or AIFF recordings; named sound selection and Sample Root control.
+- Sample playback with looping, transposition, smooth sound changes and the existing effects. Major/minor quality is preserved from the recording.
+- Private local cache and sample-library references saved in plugin/app state. No audio uploads or online service is required for playback.
+- Filename root guesses for note prefixes; set the root manually for other names. Imports use up to 60 seconds at 32 kHz stereo; long files start 5 seconds in. Pitch transposition also changes playback speed. Missing or invalid files are reported.
+
+See [SAMPLE-CREDITS.md](SAMPLE-CREDITS.md) for creators, licenses and preparation details. Sample selection/importing are native features; the browser preview remains a separate synthesizer demo.
 
 ## What is in this package
 
@@ -38,7 +48,7 @@ The browser preview also supports computer keys A W S E D F T G Y H U J and Spac
 | Texture | Velvet / Radiance / Halo | Alternate harmonic colours |
 | Latch | On / Off | Hold MIDI-triggered drone after note release |
 
-Four starting presets: Still Waters, Prayer Room, Open Heaven, Morning Light. Parameters can be automated and are stored in DAW project state. The plugin does not currently save standalone sessions, import samples, include a piano instrument, expose separate MIDI zones, or implement tempo-sync. Texture changes apply immediately in native engine and on the next note in the browser preview. This project uses original synthesized tones, not any Presence samples, artwork, or code.
+Four starting presets: Still Waters, Prayer Room, Open Heaven, Morning Light. Parameters and sound selection can be automated and are stored in DAW project state. Imported sample paths/names/root notes are also saved; the audio itself stays in a local cache. The plugin does not include a piano instrument, separate MIDI zones, time-stretching or host tempo-sync. The native sample library contains 2 factory sounds and 8 imported slots per instance. Open a new instance for additional imports when the slots or the 256 MiB sample-memory budget are full. Texture changes apply immediately in native engine and on the next note in the browser preview. Original synthesized tones and the two credited CC0 recordings are used; no Presence samples, artwork or code are included.
 
 ## Build macOS
 
@@ -48,7 +58,7 @@ Install Xcode Command Line Tools, Git, and CMake 3.22 or newer. With this folder
 bash scripts/build-mac.sh
 ```
 
-Creates `dist/Abide-0.1.0-macOS-Universal.pkg`, containing `/Applications/Abide.app` and `/Library/Audio/Plug-Ins/VST3/Abide.vst3`. Targets macOS 11 or newer. The package is unsigned and binaries are only ad-hoc signed; a distributable trusted release requires Apple Developer signing and notarization. This script does not disable Gatekeeper or alter security settings.
+Creates `dist/Abide-0.2.0-macOS-Universal.pkg`, containing `/Applications/Abide.app` and `/Library/Audio/Plug-Ins/VST3/Abide.vst3`. Targets macOS 11 or newer. The package is unsigned and binaries are only ad-hoc signed; a distributable trusted release requires Apple Developer signing and notarization. This script does not disable Gatekeeper or alter security settings.
 
 ## Build Windows
 
@@ -58,7 +68,7 @@ Install Visual Studio 2022 with Desktop development with C++, Windows SDK, Git, 
 ./scripts/build-windows.ps1
 ```
 
-Creates `dist/Abide-0.1.0-Windows-x64.zip`; with Inno Setup also creates a Setup.exe. The ZIP includes Abide.exe, the entire Abide.vst3 bundle and an administrator installation script. Install the full VST3 bundle, not just its inner binary. Windows executables are unsigned. Requires the current Microsoft Visual C++ 2015–2022 x64 Redistributable on target machines. Native Windows audio uses JUCE's default device backends; no proprietary ASIO SDK is bundled.
+Creates `dist/Abide-0.2.0-Windows-x64.zip`; with Inno Setup also creates a Setup.exe. The ZIP includes Abide.exe, the entire Abide.vst3 bundle and an administrator installation script. Install the full VST3 bundle, not just its inner binary. Windows executables are unsigned. Requires the current Microsoft Visual C++ 2015–2022 x64 Redistributable on target machines. Native Windows audio uses JUCE's default device backends; no proprietary ASIO SDK is bundled.
 
 ## GitHub builds
 

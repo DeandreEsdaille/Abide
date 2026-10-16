@@ -1,20 +1,28 @@
-ABIDE by Gimme That Juice — v0.1 prototype
+ABIDE 0.2 — Gimme That Juice
 
-TRY IT NOW (Mac or Windows)
-1. Extract this ZIP.
-2. Open Preview.html in Chrome or Edge.
-3. Click ENABLE AUDIO, then a note such as C.
-4. Adjust Reverb, Room Size, Delay, Delay Time, Feedback and the other controls.
-5. FADE OUT stops gradually. PANIC stops everything immediately.
+NEW DRONE SOUNDS
+Use DRONE SOUND to choose Heavenly Choir, Cloud Drift, or the original synthesizer.
+The two factory recordings are included, so you do not need to download anything.
+Click C through B or send MIDI to play. Switch sounds while a drone is playing.
+Reverb, Delay and the other controls work on every sound.
 
-Render an audio demo from a local build with:
-AbideSmoke --render Abide-Audio-Demo.wav.
-The generated atmospheric photograph is in Assets/atmosphere.jpg.
+YOUR OWN RECORDINGS
+1. Download a sound you are licensed to use (WAV, MP3, FLAC or AIFF).
+2. Click IMPORT DRONES and choose one or several files (8 imported slots).
+3. Select its name in DRONE SOUND.
+4. Set SAMPLE ROOT to the recording's original key, then choose your playback key.
+Names beginning with C-, Db-, F#-, etc. provide an initial root guess.
+Abide remembers the local sample references in your saved project/app state.
 
-NATIVE VST3 AND STANDALONE
-This ZIP contains the source and build scripts, not compiled Mac/Windows
-installers. Native VST3 and standalone builds passed on Linux, Windows and Mac.
-Get installers from GitHub Actions run 38938345485. See README.md for scripts and the included GitHub Actions workflow.
+Imports are cached locally, never uploaded. Abide uses up to 60 seconds of a
+recording, starting 5 seconds in for files longer than 90 seconds. Pitch changes
+also change the recording's playback speed. Chords retain major/minor quality.
 
-The browser preview lets you try the idea today; it is not a VST3 and will
-sound somewhat different from the native processor.
+Fade Out releases the drone; Panic stops sound and clears effects immediately.
+
+Installers include standalone and VST3 versions. Close your DAW before updating,
+then rescan plugins if needed. The installers are unsigned prerelease builds.
+
+Sample creator credits and links are in SAMPLE-CREDITS.md.
+Preview.html is the older browser synthesizer preview; sample importing and
+factory recordings in version 0.2 are native app/VST3 features.
