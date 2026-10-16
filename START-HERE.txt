@@ -13,9 +13,8 @@ The generated atmospheric photograph is in Assets/atmosphere.jpg.
 
 NATIVE VST3 AND STANDALONE
 This ZIP contains the source and build scripts, not compiled Mac/Windows
-installers. The source compiles as a native VST3 and standalone on the Linux
-development machine. Mac and Windows builds still need to run on their native
-runners. See README.md for scripts and the included GitHub Actions workflow.
+installers. Native VST3 and standalone builds passed on Linux, Windows and Mac.
+Get installers from GitHub Actions run 38938345485. See README.md for scripts and the included GitHub Actions workflow.
 
 The browser preview lets you try the idea today; it is not a VST3 and will
 sound somewhat different from the native processor.
