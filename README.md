@@ -34,7 +34,7 @@ See [SAMPLE-CREDITS.md](SAMPLE-CREDITS.md) for creators, licenses and preparatio
 - Build scripts, a GitHub Actions build workflow, automated engine and processor checks.
 - Render a native audio demo after building with: AbideSmoke --render Abide-Audio-Demo.wav.
 
-Native macOS Universal and Windows x64 builds passed on 16 October 2026, including all three automated engine, processor and sample tests. Download the VST3/standalone installers from the [successful build run](https://github.com/DeandreEsdaille/Abide/actions/runs/38949918514). This is a prerelease: installation on end-user machines, physical audio/MIDI devices, and real DAW compatibility have not yet been tested.
+Native macOS Universal and Windows x64 builds passed on 16 October 2026, including all three automated engine, processor and sample tests. Download the VST3/standalone installers from the [successful build run](https://github.com/DeandreEsdaille/Abide/actions/runs/38951591958). This is a prerelease: installation on end-user machines, physical audio/MIDI devices, and real DAW compatibility have not yet been tested.
 
 ## Play
 
@@ -86,7 +86,7 @@ Creates `dist/Abide-0.4.0-Windows-x64.zip`; with Inno Setup also creates a Setup
 
 ## GitHub builds
 
-Put the contents of this folder at the root of a Git repository; include `.github/workflows/build.yml` and the artwork. Push or run Build Abide manually in Actions. The macOS and Windows jobs produce downloadable artifacts. The reference macOS and Windows jobs both passed in [run 38949918514](https://github.com/DeandreEsdaille/Abide/actions/runs/38949918514). Downloading source does not run a build automatically.
+Put the contents of this folder at the root of a Git repository; include `.github/workflows/build.yml` and the artwork. Push or run Build Abide manually in Actions. The macOS and Windows jobs produce downloadable artifacts. The reference macOS and Windows jobs both passed in [run 38951591958](https://github.com/DeandreEsdaille/Abide/actions/runs/38951591958). Downloading source does not run a build automatically.
 
 JUCE 8.0.6 is pinned to commit 51a8a6d7aeae7326956d747737ccf1575e61e209. CMake downloads it on the first build, so internet access is required. Set `-DJUCE_PATH=/absolute/path/to/JUCE` to use a local copy. No JUCE checkout is included in this ZIP.
 

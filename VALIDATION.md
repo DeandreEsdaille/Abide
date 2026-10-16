@@ -1,5 +1,14 @@
 # Validation — 16 October 2026
 
+## Version 0.4.0 — violet orbital interface
+
+- Original cached particle orbit scene, layered chromatic keys, preset pads, illuminated knobs and horizontal effect faders. Existing processor parameter IDs and sample library retained.
+- Linux native standalone/VST3 compiled, native editor rendered and visually inspected; 3/3 CTest checks passed.
+- Windows x64 and macOS Universal builds succeeded in [run 38951591958](https://github.com/DeandreEsdaille/Abide/actions/runs/38951591958). Both runners passed all 3 automated tests and uploaded installer artifacts.
+- Package byte integrity and payload inspection were not completed for this version because the workspace disconnected during artifact retrieval. Download the build artifacts directly from the successful Actions run.
+- End-user installation and real DAW testing remain unverified; installers are unsigned.
+
+
 ## Version 0.3.0 — premium interface
 
 - Native editor redesigned with 11 vertical faders in Sculpt, Space and Master banks; machined caps, recessed rails and raised buttons.
