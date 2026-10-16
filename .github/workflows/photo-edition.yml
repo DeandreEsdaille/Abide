@@ -1,4 +1,4 @@
-name: Build Abide Photo Edition
+name: Build Abide Logic AU and Windows VST3
 on:
   workflow_dispatch:
   push:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Verify and extract approved photo edition source
+      - name: Verify source and enable Logic Audio Unit
         shell: python
         run: |
           import pathlib, hashlib, zipfile, io
@@ -24,10 +24,30 @@ jobs:
           data = b''.join(p.read_bytes() for p in parts)
           assert hashlib.sha256(data).hexdigest() == '1105faba8d40ce5d4f52d3c26dec29d1f153e4526ad876d4951d051179f37690', 'Source checksum mismatch'
           zipfile.ZipFile(io.BytesIO(data)).extractall('photo-edition')
-      - name: Build and test macOS universal installer
+          root = pathlib.Path('photo-edition')
+          for name in ['CMakeLists.txt', 'scripts/build-windows.ps1', 'scripts/Abide.iss']:
+              p = root / name
+              p.write_text(p.read_text(encoding='utf-8-sig').replace('0.4.0','0.5.0'), encoding='utf-8')
+          p = root / 'CMakeLists.txt'
+          text = p.read_text()
+          text = text.replace('juce_add_plugin(Abide', 'if(APPLE)\n set(ABIDE_FORMATS AU)\nelse()\n set(ABIDE_FORMATS VST3 Standalone)\nendif()\njuce_add_plugin(Abide')
+          text = text.replace('FALSE FORMATS VST3 Standalone', 'FALSE FORMATS ${ABIDE_FORMATS} AU_MAIN_TYPE kAudioUnitType_MusicDevice')
+          p.write_text(text)
+      - name: Build and test Mac Universal AU
         if: runner.os == 'macOS'
-        run: bash photo-edition/scripts/build-mac.sh
-      - name: Build and test Windows installer
+        run: |
+          cd photo-edition
+          cmake -S . -B build-mac -DCMAKE_BUILD_TYPE=Release '-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64'
+          cmake --build build-mac --config Release --parallel 2
+          ctest --test-dir build-mac -C Release --output-on-failure
+          mkdir -p dist/mac-root/Library/Audio/Plug-Ins/Components
+          ditto build-mac/Abide_artefacts/Release/AU/Abide.component dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component
+          codesign --force --deep --sign - dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component
+          lipo -verify_arch arm64 x86_64 dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component/Contents/MacOS/Abide
+          sudo ditto dist/mac-root/Library/Audio/Plug-Ins/Components/Abide.component /Library/Audio/Plug-Ins/Components/Abide.component
+          /usr/bin/auval -v aumu Abid GtJu
+          pkgbuild --root dist/mac-root --identifier com.gimmethatjuice.abide.au --version 0.5.0 --install-location / dist/Abide-0.5.0-macOS-Universal-AU.pkg
+      - name: Build and test Windows VST3 installer
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
@@ -35,7 +55,7 @@ jobs:
           ./photo-edition/scripts/build-windows.ps1
       - uses: actions/upload-artifact@v4
         with:
-          name: Abide-Photo-${{ runner.os }}
+          name: Abide-0.5.0-${{ runner.os }}
           path: |
             photo-edition/dist/*.pkg
             photo-edition/dist/*Setup.exe
